@@ -1,0 +1,11 @@
+{
+  "name": "hello-opensea",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.8",
+    "axios": "^0.27.2",
+    "opensea-js": "^3.0.4"
+  }
+}
