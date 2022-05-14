@@ -29,8 +29,8 @@ const getTokenId = (name)=>{
 }
 
 
-const makeOffer =  (tokenId, price)=>{
-  seaport.createBuyOrder({
+const makeOffer = async (tokenId, price)=>{
+  return seaport.createBuyOrder({
     asset:{
       tokenAddress:"0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85",
       tokenId:tokenId
@@ -38,10 +38,6 @@ const makeOffer =  (tokenId, price)=>{
     accountAddress:wallet_address,
     startAmount:price,
     expirationTime
-  }).then((offer)=>{
-    console.log(offer)
-  }).catch(err=>{
-    console.log(err)
   })
 }
 
@@ -59,13 +55,49 @@ const makeOffer =  (tokenId, price)=>{
 //   })
 // }
 
-for(let i=0;i<10000;i++){
-  const domain = ("0000"+i).slice(-4);
-  const tokenId = getTokenId(domain);
-  console.log(`${domain}.eth`,`trokenId:${tokenId}`)
+// const get10000Assets = ()=>{
+//   let assets = [];
+//   for(let i=0;i<10;i++){
+//     const domain = ("0000"+i).slice(-4);
+//     const tokenId = getTokenId(domain);
+//     console.log(`${domain}.eth`,`trokenId:${tokenId}`)
+  
+//     assets.push({
+//       tokenId,
+//       tokenAddress:"0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85",
+//       name:`${domain}.eth`
+//     })
 
-  // 传入tokenId 和 price
-  // makeOffer()
+//   }
+//   return assets
+// }
+
+
+const sleep = (duration)=>{
+  return new Promise(resolve=>{
+    setTimeout(resolve,duration);
+  })
 }
+
+async function main(){
+  for(let i=0;i<1;i++){
+    const domain = ("0000"+i).slice(-4);
+    const tokenId = getTokenId(domain);
+    console.log(`${domain}.eth`,`trokenId:${tokenId}`)
+    await sleep(0)
+    await makeOffer(tokenId,offer_price)
+    .then(res=>{
+      console.log(`第${i}个成功`,res)
+    })
+    .catch(err=>{
+      console.log(err);
+    }).finally(()=>{
+      console.log(`第${i}个出错`);
+    })
+  }
+  console.log("all done")
+}
+
+main()
 
 
