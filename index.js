@@ -1,49 +1,46 @@
-const   Web3 = require('web3')
-const  { OpenSeaPort, Network } = require('opensea-js')
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const  { OpenSeaPort, Network } = require('opensea-js');
 
+const private_key = "";
+const infura_project_id= "b048f1159fef4b2a85839313cff6aed8";
+const wallet_address = "";
+const offer_price = 0.01;
+const expirationTime = Math.round(Date.now() / 1000 + 60 * 60 * 2) // 过期时间
 
-const provider = new Web3.providers.HttpProvider(`https://mainnet.infura.io/v3/49d77d7e91ce4747a8086f4ebbbe98b0`)
+const provider = new HDWalletProvider({
+  privateKeys: [private_key],
+  providerOrUrl: `wss://mainnet.infura.io/ws/v3/${infura_project_id}`,
+  networkCheckTimeoutnetworkCheckTimeout: 10000,
+  timeoutBlocks: 200
+})
 
 const seaport = new OpenSeaPort(provider, {
   networkName: Network.Main,
   apiKey: 'faeb5c87d0ab4d9eb0e84ea026c1b842'
 })
 
-const asset = {
-  tokenAddress:"0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85",
-  tokenId:"108139716447050348910741088656393462735770136017145801888008682844778565891977"
+for(let i=0;i<10000;i++){
+  const domain = i+"0000";
+  console.log(`${domain}.eth`);
+  // 传入tokenId 和 price
+  // makeOffer()
 }
 
-const main  = async ()=>{
-    const asset = await seaport.api.getAsset({
-    tokenAddress:"0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85", // string
-    tokenId:"108139716447050348910741088656393462735770136017145801888008682844778565891977"
-    })
-    // console.log(asset);
-    
-}
-
-const getBalance = async ()=>{
-  const balance = await seaport.getAssetBalance({
-    accountAddress:"0xFA9B690344696a8EC334bebBe269EF2729b40955",
-    asset
-  })
-  console.log(balance.toNumber())
-}
-
-const makeOffer = async ()=>{
-  const offer = await seaport.createBuyOrder({
+const makeOffer = (tokenId, price)=>{
+  seaport.createBuyOrder({
     asset:{
-      ...asset,
+      tokenAddress:"0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85",
+      tokenId:tokenId
     },
-    accountAddress:"0xDc36216742AE7d8a6c80a365713f89fbC74FfE1E",
-    startAmount:0.01,
+    accountAddress:wallet_address,
+    startAmount:price,
+    expirationTime
+  }).then((offer)=>{
+    console.log(offer)
+  }).catch(err=>{
+    console.log(err)
   })
-  
 }
 
-// main()
-// getBalance();
-makeOffer()
 
 
